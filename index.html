@@ -388,31 +388,34 @@ function drawFlame(c,bright){
 function fitText(c,t,x,y,maxW,fs,col,bold){c.save();c.font=(bold?'bold ':'')+fs+'px Georgia, serif';var w=c.measureText(t).width;if(w>maxW)fs=fs*maxW/w;
   c.font=(bold?'bold ':'')+fs+'px Georgia, serif';c.fillStyle=col||INK;c.textAlign='center';c.textBaseline='middle';c.fillText(t,x,y);c.restore();}
 var BAUM_NODES=[
- {id:'nw',t:'Natur-Wissenschaften',x:56,y:2,w:40,h:13,b:1,fill:'#cfe6ea'},
- {id:'bio',t:'Biologie',x:29,y:27,w:26,h:13,b:1,fill:'#e3f5ec'},
- {id:'pfl',t:'Pflanzen',x:10,y:52,w:18,h:13,fill:'#fff'},
- {id:'tie',t:'Tiere',x:29,y:52,w:18,h:13,fill:'#fff'},
- {id:'men',t:'Mensch',x:49,y:52,w:18,h:13,fill:'#fff'},
- {id:'bot',t:'Botanik',x:10,y:80,w:18,h:12,fill:'#fff',it:1},
- {id:'zoo',t:'Zoologie',x:29,y:80,w:18,h:12,fill:'#fff',it:1},
- {id:'hum',t:'Humanbiologie',x:49,y:80,w:21,h:12,fill:'#fff',it:1},
- {id:'phy',t:'Physik',x:66,y:52,w:12.6,h:13,b:1,fill:'#e3f5ec'},
- {id:'che',t:'Chemie',x:79.5,y:52,w:12.6,h:13,b:1,fill:'#e3f5ec'},
- {id:'and',t:'Andere',t2:'z.B.',t3:'Geologie',x:93,y:52,w:12.6,h:13,it:1,fill:'#fff'}
+ {id:'nw',t:'Natur-Wissenschaften',x:56,y:2,w:40,h:12,b:1,fill:'#cfe6ea'},
+ {id:'bel',t:'belebte Natur',x:29,y:22,w:28,h:12,b:1,fill:'#e3f5ec'},
+ {id:'unb',t:'unbelebte Natur',x:80,y:22,w:32,h:12,b:1,fill:'#e3f5ec'},
+ {id:'bio',t:'Biologie',x:29,y:42,w:24,h:12,b:1,fill:'#e3f5ec'},
+ {id:'phy',t:'Physik',x:66,y:42,w:12.6,h:12,b:1,fill:'#e3f5ec'},
+ {id:'che',t:'Chemie',x:79.5,y:42,w:12.6,h:12,b:1,fill:'#e3f5ec'},
+ {id:'and',t:'Andere',t2:'z.B.',t3:'Geologie',x:93,y:42,w:12.6,h:12,it:1,fill:'#fff'},
+ {id:'pfl',t:'Pflanzen',x:10,y:62,w:18,h:12,fill:'#fff'},
+ {id:'tie',t:'Tiere',x:29,y:62,w:18,h:12,fill:'#fff'},
+ {id:'men',t:'Mensch',x:49,y:62,w:18,h:12,fill:'#fff'},
+ {id:'bot',t:'Botanik',x:10,y:80,w:18,h:11,fill:'#fff',it:1},
+ {id:'zoo',t:'Zoologie',x:29,y:80,w:18,h:11,fill:'#fff',it:1},
+ {id:'hum',t:'Humanbiologie',x:49,y:80,w:21,h:11,fill:'#fff',it:1}
 ];
 function drawBaum(c,o){o=o||{};
   c.save();c.lineWidth=1;
   function ln(x1,y1,x2,y2){c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();}
-  ln(56,15,56,21);ln(29,21,79.5,21);ln(29,21,29,27);
-  ln(79.5,21,79.5,46);ln(66,46,93,46);[66,79.5,93].forEach(function(x){ln(x,46,x,52);});
-  ln(29,40,29,46);ln(10,46,49,46);[10,29,49].forEach(function(x){ln(x,46,x,52);});
-  ln(10,65,10,80);ln(29,65,29,80);ln(49,65,49,80);
+  ln(56,14,56,18);ln(29,18,80,18);ln(29,18,29,22);ln(80,18,80,22);      // NW -> belebt / unbelebt
+  ln(29,34,29,42);                                                       // belebt -> Biologie
+  ln(80,34,80,38);ln(66,38,93,38);[66,79.5,93].forEach(function(x){ln(x,38,x,42);}); // unbelebt -> Physik, Chemie, Andere
+  ln(29,54,29,58);ln(10,58,49,58);[10,29,49].forEach(function(x){ln(x,58,x,62);});   // Biologie -> Pflanzen, Tiere, Mensch
+  [10,29,49].forEach(function(x){ln(x,74,x,80);});
   BAUM_NODES.forEach(function(n){var hid=o.hide===n.id;c.lineWidth=0.9;
     rr(c,n.x-n.w/2,n.y,n.w,n.h,2.2,hid?'#fff3d6':n.fill);
     if(hid){fitText(c,'?',n.x,n.y+n.h/2,n.w-2,9,RED,true);return;}
-    if(n.t3){fitText(c,n.t,n.x,n.y+3.4,n.w-1.4,4.2,INK,false);fitText(c,n.t2,n.x,n.y+7,n.w-1.4,3.2,INK,false);fitText(c,n.t3,n.x,n.y+10.2,n.w-1.2,3.4,INK,false);return;}
-    if(n.id==='nw'){fitText(c,'Natur-',n.x,n.y+4.2,n.w-4,5.6,INK,true);fitText(c,'Wissenschaften',n.x,n.y+9.2,n.w-4,5.6,INK,true);return;}
-    fitText(c,n.t,n.x,n.y+n.h/2+0.2,n.w-1.4,n.b?5.4:5,INK,!!n.b);});
+    if(n.t3){fitText(c,n.t,n.x,n.y+3.4,n.w-1.4,4.2,INK,false);fitText(c,n.t2,n.x,n.y+7,n.w-1.4,3.2,INK,false);fitText(c,n.t3,n.x,n.y+10,n.w-1.2,3.4,INK,false);return;}
+    if(n.id==='nw'){fitText(c,'Natur-',n.x,n.y+3.8,n.w-4,5.4,INK,true);fitText(c,'Wissenschaften',n.x,n.y+8.6,n.w-4,5.4,INK,true);return;}
+    fitText(c,n.t,n.x,n.y+n.h/2+0.2,n.w-1.4,n.b?5.2:5,INK,!!n.b);});
   c.restore();
 }
 /* ---- Laborgeraete ---- */
@@ -512,6 +515,15 @@ function ntBaumArea(){var id=pick(['bio','phy','che']),a=BN_AREA[id];
   var t=choice('Überblick','Wie heisst der Teilbereich im markierten Feld («?»)?',a,without(AREAS,a).concat(['Geologie']).slice(0,3),{sol:'<b>'+a+'</b>'});
   t.pdfQ='Wie heisst der Teilbereich im mit «?» markierten Feld der Skizze?';
   return withImg(t,function(c){drawBaum(c,{hide:id});},330,66);}
+function ntBaumBU(){var id=pick(['bel','unb']),a=id==='bel'?'belebte Natur':'unbelebte Natur';
+  var t=choice('Überblick','Welcher Begriff gehört in das markierte Feld («?»)?',a,['belebte Natur','unbelebte Natur','Technik','Mathematik'].filter(function(x){return x!==a;}).slice(0,3).concat([]).length?without(['belebte Natur','unbelebte Natur','Technik','Mathematik'],a):[],{sol:'<b>'+a+'</b> – '+(id==='bel'?'darunter steht die Biologie (Lebewesen).':'darunter stehen Physik, Chemie und Andere.')});
+  t.pdfQ='Welcher Begriff gehört in das mit «?» markierte Feld der Skizze?';
+  return withImg(t,function(c){drawBaum(c,{hide:id});},330,66);}
+var BEL_ITEMS=[['Ein Igel','belebte Natur'],['Eine Eiche','belebte Natur'],['Ein Pilz','belebte Natur'],['Ein Frosch','belebte Natur'],['Eine Wasserpest-Pflanze','belebte Natur'],['Ein Mensch','belebte Natur'],
+ ['Ein Stein','unbelebte Natur'],['Ein Magnet','unbelebte Natur'],['Ein Gletscher','unbelebte Natur'],['Ein Stück Eisen','unbelebte Natur'],['Ein Berg','unbelebte Natur'],['Wasser','unbelebte Natur'],['Ein Vulkan','unbelebte Natur'],['Ein Regenbogen','unbelebte Natur']];
+function ntBelebt(){var x=pick(BEL_ITEMS);return choice('Belebt oder unbelebt','«'+esc(x[0])+'» – gehört das zur belebten oder zur unbelebten Natur?',x[1],without(['belebte Natur','unbelebte Natur'],x[1]),{pdfQ:'«'+x[0]+'» – gehört das zur belebten oder zur unbelebten Natur?'});}
+function ntBelFach(){var f=pick(['bio','phy','che']),a={bio:'belebte Natur',phy:'unbelebte Natur',che:'unbelebte Natur'}[f],n={bio:'Biologie',phy:'Physik',che:'Chemie'}[f];
+  return choice('Überblick','Unter welchem Begriff steht das Fach <b>'+n+'</b> in der Überblicksskizze?',a,without(['belebte Natur','unbelebte Natur'],a).concat(['Technik']),{});}
 function ntBaumSub(){var id=pick(['pfl','tie','men']),a=BN_SUB[id];
   var t=choice('Überblick','Welcher Begriff gehört in das markierte Feld («?»)?',a,without(['Pflanzen','Tiere','Mensch'],a),{sol:'<b>'+a+'</b> – darunter steht '+(id==='pfl'?'Botanik':id==='tie'?'Zoologie':'Humanbiologie')+'.'});
   t.pdfQ='Welcher Begriff gehört in das mit «?» markierte Feld der Skizze?';
@@ -962,13 +974,13 @@ var TOPICS=[
  '<div class="box"><b>Physik</b><br>erforscht grundlegende Phänomene der Natur und entwickelt daraus allgemein gültige Regeln.<br><i>Ist die Lehre von den Kräften und ihren Wirkungen.</i></div>'+
  '<div class="box"><b>Biologie</b><br>beschäftigt sich mit den Lebewesen dieser Erde.</div>'+
  '<div class="box"><b>Chemie</b><br>befasst sich mit den Eigenschaften, der Zusammensetzung und der Umwandlung von Stoffen.<br><i>Ist die Lehre von den Stoffen und Stoffumwandlungen.</i></div></div>'+
- '<h3>Überblick als Skizze</h3>'+fig('baum',380,'Überblick über die Naturwissenschaften (nach dem Dossier)')+
+ '<h3>Überblick als Skizze</h3><p>Die Natur lässt sich in <b>belebte</b> Natur (Lebewesen) und <b>unbelebte</b> Natur einteilen. Zur belebten Natur gehört die Biologie, zur unbelebten Natur gehören Physik, Chemie und weitere Fächer wie die Geologie.</p>'+fig('baum',380,'Überblick über die Naturwissenschaften (nach dem Dossier)')+
  '<h3>Beispiele aus dem Alltag</h3><table class="tbl"><thead><tr><th>Physik</th><th>Biologie</th><th>Chemie</th></tr></thead><tbody>'+
  '<tr><td>Kräfte und Bewegungen, Schall</td><td>Tiere, Pflanzen, Mensch</td><td>Verbrennen, Rosten</td></tr>'+
  '<tr><td>Wärme, Temperatur</td><td>Zellen, Pilze</td><td>Gären, Verfaulen, Backen</td></tr>'+
  '<tr><td>Strom, Magnetismus</td><td>Lebewesen, Stoffwechsel</td><td>Farbstoffe, Klebstoffe</td></tr>'+
  '<tr><td>Licht, Spiegelung, Regenbogen</td><td>Fortpflanzung, Fotosynthese</td><td>Duftstoffe</td></tr></tbody></table>',
- gen:genFrom([[2,ntZuord],[1,ntZuordTyped],[2,ntFrage],[2,ntMehrfach],[2,ntNichtDazu],[1,ntDefBsp],[1,ntWahrFalsch],[1,ntBaumSub],[1,ntBaumArea],[1,ntBaumFw],[1,ntTerm],[1,ntThree],[1,ntDef],[1,ntOdd]])},
+ gen:genFrom([[2,ntZuord],[1,ntZuordTyped],[2,ntFrage],[2,ntMehrfach],[2,ntNichtDazu],[1,ntDefBsp],[1,ntWahrFalsch],[1,ntBaumSub],[1,ntBaumArea],[1,ntBaumFw],[1,ntBaumBU],[1,ntBelebt],[1,ntBelFach],[1,ntTerm],[1,ntThree],[1,ntDef],[1,ntOdd]])},
 
 {key:'bio',nav:'Biologie: Tiere, Pflanzen, Mensch',title:'Die drei Hauptbereiche der Schulbiologie',lz:[4],
  theory:
